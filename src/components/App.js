@@ -1,47 +1,15 @@
-import logo from './logo.svg';
 import React from 'react';
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
 // import './App.css';
 
 function App() {
   return (
     <div className="page__container">
-      <header className="header page__section">
-        <img
-          className="logo header__logo"
-          src={logo}
-          alt="Логотип Проекта Место"
-        />
-      </header>
-
-      <main className="content page__content">
-        <section className="profile page__section">
-          <div className="profile__avatar"></div>
-
-          <div className="profile__info">
-            <h1 className="profile__name">Жак-Ив Кусто</h1>
-            <p className="profile__bio">Исследователь океана</p>
-
-            <button
-              className="profile__edit-button button button_type_edit hover"
-              type="button"
-            ></button>
-          </div>
-
-          <button
-            className="button button_type_add hover"
-            name="add-button"
-            type="button"
-          ></button>
-        </section>
-
-        <section className="places page__section">
-          <ul className="places__list"></ul>
-        </section>
-      </main>
-
-      <footer className="footer page__section">
-        <p className="footer__copyright">&copy; 2021 Максим Тропников</p>
-      </footer>
+      <Header />
+      <Main />
+      <Footer />
 
       <div className="popup profile-edit">
         <div className="popup__container">
