@@ -1,13 +1,19 @@
 function Main() {
   function handleEditAvatarClick() {
-    document.querySelector('.avatar-update').classList.add('popup_opened');
+    document
+      .querySelector('.popup_type_avatar-update')
+      .classList.add('popup_opened');
   }
   function handleEditProfileClick() {
-    document.querySelector('.profile-edit').classList.add('popup_opened');
+    document
+      .querySelector('.popup_type_profile-edit')
+      .classList.add('popup_opened');
   }
 
   function handleAddPlaceClick() {
-    document.querySelector('.place-add').classList.add('popup_opened');
+    document
+      .querySelector('.popup_type_place-add')
+      .classList.add('popup_opened');
   }
 
   return (
