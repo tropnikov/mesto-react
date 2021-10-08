@@ -4,16 +4,33 @@ import api from '../utils/api';
 function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
   const [userName, setUserName] = React.useState();
   const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setuserAvatar] = React.useState();
+  const [userAvatar, setUserAvatar] = React.useState();
+
+  React.useEffect(() => {
+    api
+      .getUserData()
+      .then((data) => {
+        setUserName(data.name);
+        setUserDescription(data.about);
+        setUserAvatar(data.avatar);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   return (
     <main className="content page__content">
       <section className="profile page__section">
-        <div className="profile__avatar" onClick={onEditAvatar}></div>
+        <div
+          className="profile__avatar"
+          onClick={onEditAvatar}
+          style={{ backgroundImage: `url(${userAvatar})` }}
+        ></div>
 
         <div className="profile__info">
-          <h1 className="profile__name">Жак-Ив Кусто</h1>
-          <p className="profile__bio">Исследователь океана</p>
+          <h1 className="profile__name">{userName}</h1>
+          <p className="profile__bio">{userDescription}</p>
 
           <button
             className="profile__edit-button button button_type_edit hover"
