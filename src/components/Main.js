@@ -1,4 +1,11 @@
+import React from 'react';
+import api from '../utils/api';
+
 function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
+  const [userName, setUserName] = React.useState();
+  const [userDescription, setUserDescription] = React.useState();
+  const [userAvatar, setuserAvatar] = React.useState();
+
   return (
     <main className="content page__content">
       <section className="profile page__section">
