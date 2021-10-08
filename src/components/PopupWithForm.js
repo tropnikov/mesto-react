@@ -1,5 +1,4 @@
 function PopupWithForm(props) {
-  console.log(1);
   return (
     <div
       className={
@@ -13,6 +12,7 @@ function PopupWithForm(props) {
             button button_type_close
             hover
           "
+          onClick={props.onClose}
           type="button"
           aria-label="Закрыть попап"
         ></button>
