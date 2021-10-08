@@ -2,17 +2,34 @@ import React from 'react';
 import api from '../utils/api';
 
 function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
-  const [userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
+  const [userName, setUserName] = React.useState('Жак-Ив Кусто');
+  const [userDescription, setUserDescription] = React.useState(
+    'Исследователь океана'
+  );
   const [userAvatar, setUserAvatar] = React.useState();
+  const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api
-      .getUserData()
+    // api
+    //   .getUserData()
+    //   .then((data) => {
+    //     setUserName(data.name);
+    //     setUserDescription(data.about);
+    //     setUserAvatar(data.avatar);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    Promise.all([api.getUserData(), api.getInitialCards()])
       .then((data) => {
-        setUserName(data.name);
-        setUserDescription(data.about);
-        setUserAvatar(data.avatar);
+        const [userData, cardsData] = data;
+        setUserName(userData.name);
+        setUserDescription(userData.about);
+        setUserAvatar(userData.avatar);
+        // console.log(cardsData);
+        // console.log(cards);
+        setCards(cardsData);
       })
       .catch((err) => {
         console.log(err);
@@ -48,7 +65,30 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
       </section>
 
       <section className="places page__section">
-        <ul className="places__list"></ul>
+        <ul className="places__list">
+          {cards.map((card) => {
+            return (
+              <li key={card._id} className="place">
+                <img
+                  className="place__photo"
+                  src={card.link}
+                  alt="Фотография места"
+                />
+                <button
+                  type="button"
+                  className="place__delete place__delete_active button_type_delete hover"
+                ></button>
+                <div className="place__info">
+                  <h3 className="place__title">{card.title}</h3>
+                  <div className="place__likes-container">
+                    <button className="place__like" type="button"></button>
+                    <p className="place__likes-count">{card.likes.length}</p>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       </section>
     </main>
   );
