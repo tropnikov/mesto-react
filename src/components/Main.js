@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../utils/api';
 import Card from './Card';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
+function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
   const [userName, setUserName] = React.useState('Жак-Ив Кусто');
   const [userDescription, setUserDescription] = React.useState(
     'Исследователь океана'
@@ -67,8 +67,10 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
 
       <section className="places page__section">
         <ul className="places__list">
-          {cards.map((item) => {
-            return <Card key={item._id} card={item} />;
+          {cards.map((card) => {
+            return (
+              <Card key={card._id} card={card} onCardClick={handleCardClick} />
+            );
           })}
         </ul>
       </section>
