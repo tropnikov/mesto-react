@@ -2,7 +2,9 @@ function PopupWithForm(props) {
   return (
     <div
       className={
-        `popup popup_type_${props.name}` + (props.isOpen && ` popup_opened`)
+        props.isOpen
+          ? `popup popup_type_${props.name} popup_opened`
+          : `popup popup_type_${props.name}`
       }
     >
       <div className="popup__container">
@@ -25,6 +27,17 @@ function PopupWithForm(props) {
           noValidate
         >
           {props.children}
+          <button
+            type="submit"
+            className="
+          popup__save
+          button
+          form__submit
+          button_type_save
+          button_disabled"
+          >
+            {props.submitButtonText}
+          </button>
         </form>
       </div>
     </div>

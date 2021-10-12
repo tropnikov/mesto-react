@@ -1,5 +1,4 @@
 function Card({ card, onCardClick }) {
-  console.log(onCardClick);
   const handleClick = () => {
     onCardClick(card);
   };

@@ -7,7 +7,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
   const [userDescription, setUserDescription] = React.useState(
     'Исследователь океана'
   );
-  const [userAvatar, setUserAvatar] = React.useState();
+  const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
@@ -22,7 +22,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   return (
     <main className="content page__content">
