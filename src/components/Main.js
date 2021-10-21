@@ -1,28 +1,40 @@
 import React from 'react';
 import api from '../utils/api';
 import Card from './Card';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
-  const [userName, setUserName] = React.useState('Жак-Ив Кусто');
-  const [userDescription, setUserDescription] = React.useState(
-    'Исследователь океана'
-  );
-  const [userAvatar, setUserAvatar] = React.useState('');
+  const currentUser = React.useContext(CurrentUserContext);
+
+  // const [userName, setUserName] = React.useState('Жак-Ив Кусто');
+  // const [userDescription, setUserDescription] = React.useState(
+  //   'Исследователь океана'
+  // );
+  // const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialCards()])
+    const cardsPromise = new Promise(api.getInitialCards());
+    cardsPromise
       .then((data) => {
-        const [userData, cardsData] = data;
-        setUserName(userData.name);
-        setUserDescription(userData.about);
-        setUserAvatar(userData.avatar);
-        setCards(cardsData);
+        setCards(data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+  //   Promise.all([api.getUserData(), api.getInitialCards()])
+  //     .then((data) => {
+  //       const [userData, cardsData] = data;
+  //       setUserName(userData.name);
+  //       setUserDescription(userData.about);
+  //       setUserAvatar(userData.avatar);
+  //       setCards(cardsData);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   return (
     <main className="content page__content">
@@ -30,12 +42,12 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
         <div
           className="profile__avatar"
           onClick={onEditAvatar}
-          style={{ backgroundImage: `url(${userAvatar})` }}
+          style={{ backgroundImage: `url(${currentUser.avatar})` }}
         ></div>
 
         <div className="profile__info">
-          <h1 className="profile__name">{userName}</h1>
-          <p className="profile__bio">{userDescription}</p>
+          <h1 className="profile__name">{currentUser.name}</h1>
+          <p className="profile__bio">{currentUser.about}</p>
 
           <button
             className="profile__edit-button button button_type_edit hover"
