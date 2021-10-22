@@ -6,6 +6,7 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({
@@ -71,38 +72,10 @@ function App() {
           handleCardClick={handleCardClick}
         />
         <Footer />
-
-        <PopupWithForm
+        <EditProfilePopup
           onClose={closeAllPopups}
           isOpen={isEditProfilePopupOpen}
-          name="profile-edit"
-          title="Редактировать профиль"
-          submitButtonText="Сохранить"
-        >
-          <input
-            id="profile-name-input"
-            type="text"
-            name="name"
-            className="form__input"
-            placeholder="Имя"
-            minLength="2"
-            maxLength="40"
-            required
-          />
-          <span className="profile-name-input-error form__input-error"></span>
-          <input
-            id="profile-bio-input"
-            type="text"
-            name="about"
-            className="form__input"
-            placeholder="Краткое био"
-            minLength="2"
-            maxLength="200"
-            required
-          />
-          <span className="profile-bio-input-error form__input-error"></span>
-        </PopupWithForm>
-
+        />
         <PopupWithForm
           onClose={closeAllPopups}
           isOpen={isAddPlacePopupOpen}
