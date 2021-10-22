@@ -14,8 +14,8 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    const cardsPromise = new Promise(api.getInitialCards());
-    cardsPromise
+    api
+      .getInitialCards()
       .then((data) => {
         setCards(data);
       })
@@ -33,18 +33,17 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     });
   };
-  //   Promise.all([api.getUserData(), api.getInitialCards()])
-  //     .then((data) => {
-  //       const [userData, cardsData] = data;
-  //       setUserName(userData.name);
-  //       setUserDescription(userData.about);
-  //       setUserAvatar(userData.avatar);
-  //       setCards(cardsData);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+
+  const handleCardDelete = (card) => {
+    const isOwn = card.owner._id === currentUser._id;
+    if (isOwn) {
+      api
+        .deleteCard(card._id)
+        .then(() =>
+          setCards((state) => state.filter((c) => c._id !== card._id))
+        );
+    }
+  };
 
   return (
     <main className="content page__content">
@@ -83,6 +82,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
                 card={card}
                 onCardClick={handleCardClick}
                 onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
               />
             );
           })}

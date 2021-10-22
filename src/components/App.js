@@ -8,12 +8,17 @@ import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
-  const [currentUser, setCurrentUser] = React.useState();
+  const [currentUser, setCurrentUser] = React.useState({
+    name: '',
+    about: '',
+    _id: '',
+  });
 
   React.useEffect(() => {
-    const getUserInfoPromise = new Promise(api.getUserData());
-    getUserInfoPromise
+    api
+      .getUserData()
       .then((data) => {
+        // debugger;
         setCurrentUser(data);
         // setUserName(data.name);
         // setUserDescription(data.about);

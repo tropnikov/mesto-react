@@ -50,6 +50,13 @@ class Api {
     }).then(this.#handleResponse);
   }
 
+  changeLikeCardStatus(cardId, like) {
+    return fetch(this.#baseUrl + `/cards/likes/${cardId}`, {
+      method: like ? 'PUT' : 'DELETE',
+      headers: this.#headers,
+    }).then(this.#handleResponse);
+  }
+
   likeCard(cardId) {
     return fetch(this.#baseUrl + `/cards/likes/${cardId}`, {
       method: 'PUT',
