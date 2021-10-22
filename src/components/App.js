@@ -19,12 +19,7 @@ function App() {
     api
       .getUserData()
       .then((data) => {
-        // debugger;
         setCurrentUser(data);
-        // setUserName(data.name);
-        // setUserDescription(data.about);
-        // setUserAvatar(data.avatar);
-        // setCards(cardsData);
       })
       .catch((err) => {
         console.log(err);
@@ -61,6 +56,18 @@ function App() {
     setSelectedCard(null);
   };
 
+  const handleUpdateUser = (inputData) => {
+    api
+      .saveUserData(inputData)
+      .then((response) => {
+        setCurrentUser(response);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__container">
@@ -72,10 +79,13 @@ function App() {
           handleCardClick={handleCardClick}
         />
         <Footer />
+
         <EditProfilePopup
           onClose={closeAllPopups}
           isOpen={isEditProfilePopupOpen}
+          onUpdateUser={handleUpdateUser}
         />
+
         <PopupWithForm
           onClose={closeAllPopups}
           isOpen={isAddPlacePopupOpen}
