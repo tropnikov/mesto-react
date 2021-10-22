@@ -23,6 +23,16 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
         console.log(err);
       });
   }, []);
+
+  const handleCardLike = (card) => {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+    });
+  };
   //   Promise.all([api.getUserData(), api.getInitialCards()])
   //     .then((data) => {
   //       const [userData, cardsData] = data;
@@ -68,7 +78,12 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
         <ul className="places__list">
           {cards.map((card) => {
             return (
-              <Card key={card._id} card={card} onCardClick={handleCardClick} />
+              <Card
+                key={card._id}
+                card={card}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+              />
             );
           })}
         </ul>

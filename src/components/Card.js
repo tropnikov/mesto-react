@@ -1,7 +1,7 @@
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Card({ card, onCardClick }) {
+function Card({ card, onCardClick, onCardLike }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   // Определяем, являемся ли мы владельцем текущей карточки
@@ -22,6 +22,10 @@ function Card({ card, onCardClick }) {
     onCardClick(card);
   };
 
+  const handleLikeClick = () => {
+    onCardLike(card);
+  };
+
   return (
     <li className="place">
       <img
@@ -32,7 +36,7 @@ function Card({ card, onCardClick }) {
       />
       <button
         type="button"
-        className="place__delete place__delete_active button_type_delete hover"
+        className="place__delete place__delete_inactive button_type_delete hover"
       ></button>
       <div className="place__info">
         <h3 className="place__title">{card.name}</h3>
