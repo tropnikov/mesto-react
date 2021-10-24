@@ -1,9 +1,17 @@
 import React from 'react';
-import api from '../utils/api';
+// import api from '../utils/api';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
+function Main({
+  onEditProfile,
+  onAddPlace,
+  onEditAvatar,
+  handleCardClick,
+  onCardLike,
+  onCardDelete,
+  cards,
+}) {
   const currentUser = React.useContext(CurrentUserContext);
 
   // const [userName, setUserName] = React.useState('Жак-Ив Кусто');
@@ -11,39 +19,6 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
   //   'Исследователь океана'
   // );
   // const [userAvatar, setUserAvatar] = React.useState('');
-  const [cards, setCards] = React.useState([]);
-
-  React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  const handleCardLike = (card) => {
-    // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-
-    // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
-  };
-
-  const handleCardDelete = (card) => {
-    const isOwn = card.owner._id === currentUser._id;
-    if (isOwn) {
-      api
-        .deleteCard(card._id)
-        .then(() =>
-          setCards((state) => state.filter((c) => c._id !== card._id))
-        );
-    }
-  };
 
   return (
     <main className="content page__content">
@@ -81,8 +56,8 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, handleCardClick }) {
                 key={card._id}
                 card={card}
                 onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
+                onCardLike={onCardLike}
+                onCardDelete={onCardDelete}
               />
             );
           })}

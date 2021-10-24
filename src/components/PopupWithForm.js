@@ -35,7 +35,7 @@ function PopupWithForm(props) {
           button
           form__submit
           button_type_save
-          button_disabled"
+          "
           >
             {props.submitButtonText}
           </button>

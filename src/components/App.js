@@ -8,6 +8,7 @@ import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({
@@ -15,6 +16,15 @@ function App() {
     about: '',
     _id: '',
   });
+
+  const [cards, setCards] = React.useState([]);
+
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
+    React.useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
+    React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState(null);
 
   React.useEffect(() => {
     api
@@ -27,12 +37,16 @@ function App() {
       });
   }, []);
 
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState(null);
+  React.useEffect(() => {
+    api
+      .getInitialCards()
+      .then((data) => {
+        setCards(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleCardClick = (card) => {
     setSelectedCard(card);
@@ -56,6 +70,8 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(null);
   };
+
+  //* User
 
   const handleUpdateUser = (inputData) => {
     api
@@ -81,6 +97,41 @@ function App() {
       });
   };
 
+  //* Cards
+
+  const handleCardLike = (card) => {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+    });
+  };
+
+  const handleCardDelete = (card) => {
+    const isOwn = card.owner._id === currentUser._id;
+    if (isOwn) {
+      api
+        .deleteCard(card._id)
+        .then(() =>
+          setCards((state) => state.filter((c) => c._id !== card._id))
+        );
+    }
+  };
+
+  const handleAddPlaceSubmit = (newCard) => {
+    api
+      .addNewCard(newCard)
+      .then((response) => {
+        setCards([response, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__container">
@@ -90,6 +141,9 @@ function App() {
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           handleCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+          cards={cards}
         />
         <Footer />
 
@@ -105,34 +159,11 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
 
-        <PopupWithForm
-          onClose={closeAllPopups}
+        <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
-          name="place-add"
-          title="Новое место"
-          submitButtonText="Создать"
-        >
-          <input
-            id="place-name-input"
-            type="text"
-            name="name"
-            className="form__input"
-            placeholder="Название"
-            minLength="2"
-            maxLength="30"
-            required
-          />
-          <span className="place-name-input-error form__input-error"></span>
-          <input
-            id="place-link-input"
-            type="url"
-            name="link"
-            className="form__input"
-            placeholder="Ссылка на картинку"
-            required
-          />
-          <span className="place-link-input-error form__input-error"></span>
-        </PopupWithForm>
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
 
         <PopupWithForm
           onClose={closeAllPopups}
