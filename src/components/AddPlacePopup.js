@@ -5,6 +5,24 @@ function AddPlacePopup({ onClose, isOpen, onAddPlace }) {
   const [placeName, setPlaceName] = React.useState('');
   const [placeLink, setPlaceLink] = React.useState('');
 
+  // ? Правильно ли я понимаю, что через рефы код короче? :
+  // const placeNameRef = React.useRef('');
+  // const placeLinkRef = React.useRef('');
+  // const handleSubmit = (evt) => {
+  // evt.preventDefault();
+  // onAddPlace({
+  // name: placeNameRef.current.value,
+  // link: placeLinkRef.current.value,
+  // });
+  // };
+  // Есть ли какие-то рекомендации, что лучше использовать здесь (и вообще)?
+  // И как в таком случае очищать поле ввода? Потому что в попапе аватара оно сейчас не очищается...
+
+  React.useEffect(() => {
+    setPlaceName('');
+    setPlaceLink('');
+  }, [isOpen]);
+
   const handlePlaceNameChange = (evt) => {
     setPlaceName(evt.target.value);
   };
@@ -14,7 +32,6 @@ function AddPlacePopup({ onClose, isOpen, onAddPlace }) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-
     onAddPlace({ name: placeName, link: placeLink });
   };
 
@@ -28,6 +45,7 @@ function AddPlacePopup({ onClose, isOpen, onAddPlace }) {
       onSubmit={handleSubmit}
     >
       <input
+        // ref={placeNameRef}
         id="place-name-input"
         type="text"
         name="name"
@@ -36,16 +54,19 @@ function AddPlacePopup({ onClose, isOpen, onAddPlace }) {
         minLength="2"
         maxLength="30"
         required
+        value={placeName}
         onChange={handlePlaceNameChange}
       />
       <span className="place-name-input-error form__input-error"></span>
       <input
+        // ref={placeLinkRef}
         id="place-link-input"
         type="url"
         name="link"
         className="form__input"
         placeholder="Ссылка на картинку"
         required
+        value={placeLink}
         onChange={handlePlaceLinkChange}
       />
       <span className="place-link-input-error form__input-error"></span>

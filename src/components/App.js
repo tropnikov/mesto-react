@@ -27,21 +27,10 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState(null);
 
   React.useEffect(() => {
-    api
-      .getUserData()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
+    Promise.all([api.getUserData(), api.getInitialCards()])
+      .then(([userData, cards]) => {
+        setCurrentUser(userData);
+        setCards(cards);
       })
       .catch((err) => {
         console.log(err);
@@ -104,9 +93,16 @@ function App() {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((c) => (c._id === card._id ? newCard : c))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleCardDelete = (card) => {
@@ -116,7 +112,10 @@ function App() {
         .deleteCard(card._id)
         .then(() =>
           setCards((state) => state.filter((c) => c._id !== card._id))
-        );
+        )
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
