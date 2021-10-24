@@ -24,16 +24,16 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     setDescription(evt.target.value);
   };
 
-  function handleSubmit(e) {
+  const handleSubmit = (evt) => {
     // Запрещаем браузеру переходить по адресу формы
-    e.preventDefault();
+    evt.preventDefault();
 
     // Передаём значения управляемых компонентов во внешний обработчик
     onUpdateUser({
       name,
       about: description,
     });
-  }
+  };
 
   return (
     <PopupWithForm
@@ -42,7 +42,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       name="profile-edit"
       title="Редактировать профиль"
       submitButtonText="Сохранить"
-      onSumbit={handleSubmit}
+      onSubmit={handleSubmit}
     >
       <input
         value={name}

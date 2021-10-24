@@ -7,6 +7,7 @@ import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({
@@ -68,6 +69,18 @@ function App() {
       });
   };
 
+  const handleUpdateAvatar = (avatarLink) => {
+    api
+      .updateAvatar(avatarLink)
+      .then((response) => {
+        setCurrentUser(response);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__container">
@@ -84,6 +97,12 @@ function App() {
           onClose={closeAllPopups}
           isOpen={isEditProfilePopupOpen}
           onUpdateUser={handleUpdateUser}
+        />
+
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
         />
 
         <PopupWithForm
@@ -121,24 +140,6 @@ function App() {
           title="Вы уверены?"
           submitButtonText="Да"
         ></PopupWithForm>
-
-        <PopupWithForm
-          onClose={closeAllPopups}
-          isOpen={isEditAvatarPopupOpen}
-          name="avatar-update"
-          title="Обновить аватар"
-          submitButtonText="Сохранить"
-        >
-          <input
-            id="avatar-update-input"
-            type="url"
-            name="avatar"
-            className="form__input"
-            placeholder="Ссылка на картинку"
-            required
-          />
-          <span className="avatar-update-input-error form__input-error"></span>
-        </PopupWithForm>
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
